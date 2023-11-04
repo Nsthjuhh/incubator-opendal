@@ -68,6 +68,17 @@ jobs:
       - name: Check diff
         run: git diff --exit-code
 
+      - name: Build
+        run: |
+          docker run \
+            -v ${{ github.workspace }}:/build \
+            -e NAPI_TARGET=x86_64-unknown-linux-gnu \
+            -w /build/bindings/nodejs \
+            ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian \
+            bash -c "yarn build"
+          # change owner to current user
+          sudo chown -R 1001:121 *.node
+
       - name: Unit test
         run: cargo nextest run --no-fail-fast
 
