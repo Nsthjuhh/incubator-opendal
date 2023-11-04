@@ -66,14 +66,8 @@ jobs:
       - name: Check diff
         run: git diff --exit-code
 
-      - name: Unit test
-        run: |
-          docker run \
-            -v ${{ github.workspace }}:/build \
-            -e NAPI_TARGET=x86_64-unknown-linux-gnu \
-            -w /build/bindings/nodejs \
-            ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian \
-            bash -c "cargo test --no-fail-fast"
+      - name: test
+        run: yarn build && OPENDAL_TEST=memory yarn test
 
   linux:
     runs-on: ubuntu-latest
